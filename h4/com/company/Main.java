@@ -1,7 +1,5 @@
 package com.company;
 
-import com.sun.javafx.scene.traversal.Algorithm;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -10,11 +8,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Calc calc1 = new Calc(new CalcWM() );
-        Calc calc2 = new Calc(new CalcWOP() );
+        CalcWithCounter calc1 = new CalcWithCounter(new CalcWM() );
+        CalcWithCounter calc2 = new CalcWithCounter(new CalcWOP() );
 
-        System.out.println(calc1.abs(-12));
-        System.out.println(calc2.abs(-12));
+        System.out.println("calc1 : |-12| = " + calc1.abs(-12));
+        System.out.println("calc2 : |-12| = " + calc2.abs(-12));
+        System.out.println("calc2: -12 - (-12) = " + calc2.razn(-12,-12));
+        System.out.println("count calc1 = " + calc1.getCounter());
+        System.out.println("count calc2 = " + calc2.getCounter());
         System.out.println("5! = " + CalcWOP.factorial(5));
 
         int n = 10;
