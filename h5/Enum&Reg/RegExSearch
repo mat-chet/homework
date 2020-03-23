@@ -1,0 +1,17 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class RegExSearch implements ISearchEngine {
+
+    @Override
+    public int search(String data, String slov) {
+
+        int kol = 0;
+        Matcher matcher = Pattern.compile(slov).matcher(data);
+        while (matcher.find()){
+            kol++;
+        }
+
+        return kol;
+    }
+}
