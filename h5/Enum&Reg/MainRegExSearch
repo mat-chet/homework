@@ -1,0 +1,28 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class MainRegExSearch {
+    public static void main(String[] args) {
+        String data = readAllBytesJava7("Война и мир.txt");
+        RegExSearch rr = new RegExSearch();
+
+        System.out.println("RegExSearch война :" + rr.search(data,"война"));
+        System.out.println("RegExSearch мир :" + rr.search(data,"мир"));
+        System.out.println("RegExSearch и :" + rr.search(data,"и"));
+    }
+
+    private static String readAllBytesJava7(String filePath)
+    {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return content;
+    }
+}
