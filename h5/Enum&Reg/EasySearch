@@ -1,0 +1,14 @@
+public class EasySearch implements ISearchEngine {
+    @Override
+    public int search(String data, String slov) {
+        StringBuilder ss = new StringBuilder(data);
+        int i = 0;
+        int kol = 0;
+        while((i = ss.indexOf(slov,i)) != -1){
+            kol++;
+            i++;
+        }
+
+        return kol;
+    }
+}
