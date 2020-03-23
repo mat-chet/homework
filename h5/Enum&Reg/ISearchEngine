@@ -1,0 +1,3 @@
+public interface ISearchEngine {
+    int search(String data, String slov);
+}
