@@ -1,0 +1,50 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Country a = Country.BELARUS;
+        System.out.println(a.getArea());
+        System.out.println(a.getPopulation());
+        System.out.println(a.compare(Country.GERMANY,Country.BELARUS));
+
+        ArrayList<Country> mas = new ArrayList<>();
+
+        mas.add(Country.BELARUS);
+        mas.add(Country.GERMANY);
+        mas.add(Country.UNITED_KINGDOM);
+        mas.add(Country.AUSTRIA);
+        mas.add(Country.DENMARK);
+        mas.add(Country.DENMARK);
+        mas.add(Country.FINLAND);
+        mas.add(Country.NORWAY);
+        mas.add(Country.SCHWIEZ);
+        mas.add(Country.SWEDEN);
+        mas.add(Country.NEDERLAND);
+
+        for(int i = 0;i< mas.size();i++){
+            System.out.println(mas.get(i)+ " " + (mas.get(i)).getArea());
+        }
+
+        System.out.println();
+        AreaComp ar = new AreaComp();
+
+        Collections.sort(mas, ar::compare );
+
+        for(int i = 0;i< mas.size();i++){
+            System.out.println(mas.get(i)+ " " + (mas.get(i)).getArea());
+        }
+
+
+
+        String str = "Я люблю JAVA";
+
+        System.out.println(str.matches("h*")); //строка != n*'h'  n = [0,1,...]
+        System.out.println(str.matches("h+")); //строка != n*'h'  n = [1,...]
+        System.out.println(str.matches("h?")); //строка != n*'h'  n = [0,1]
+
+    }
+
+}
