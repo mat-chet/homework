@@ -1,0 +1,180 @@
+
+import java.util.Comparator;
+
+public enum Country implements  ICountry , Comparator<Country> {
+
+    BELARUS {
+
+        private final int area = 207595;
+        private final int population = 9491800;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    GERMANY {
+        private final int area = 357386;
+        private final int population = 83149300;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    FINLAND {
+        private final int area = 338424;
+        private final int population = 5521158;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    UNITED_KINGDOM {
+        private final int area = 242495;
+        private final int population =  67545757;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+
+    },
+    SCHWIEZ {
+        private final int area = 41284;
+        private final int population =  8558758;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    NORWAY {
+        private final int area = 385207;
+        private final int population = 5367580;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+    },
+    DENMARK {
+        private final int area = 42933;
+        private final int population = 5822763;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    SWEDEN {
+        private final int area = 450295;
+        private final int population = 10302984;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+
+
+
+
+    },
+    NEDERLAND {
+        private final int area = 41543;
+        private final int population = 17333790;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    },
+    AUSTRIA {
+
+        private final int area = 83879;
+        private final int population = 8902600;
+
+        @Override
+        public int getArea(){
+            return area;
+        }
+
+        @Override
+        public int getPopulation() {
+            return population;
+        }
+
+
+    };
+
+    @Override
+    public int compare(Country o1, Country o2) {
+        return o1.getArea()-o2.getArea();
+    }
+
+
+
+}
