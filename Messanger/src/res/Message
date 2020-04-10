@@ -1,0 +1,51 @@
+package res;
+
+import answers.Result;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
+    public int getIdChat() {
+        return idChat;
+    }
+
+    private final int idChat;
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Date date;
+    private String content;
+    private String author;
+    public Message(String ss, String autor,int idChat){
+        this.idChat = idChat;
+        this.author = autor;
+        this.content = ss;
+    }
+
+
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getAutor() {
+        return author;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+               "date=" + date +
+               ", content='" + content + '\'' +
+               ", autor='" + author + '\'' +
+               '}';
+    }
+}
