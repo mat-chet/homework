@@ -1,0 +1,204 @@
+package server;
+
+import Request.*;
+import answers.AllUsersRequestResult;
+import answers.ConnectionRequestResult;
+import answers.MessageResult;
+import answers.NewChatRequestReult;
+import api.IConnectionRequest;
+import res.*;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class ServerThread implements Runnable {
+    public final int ServerThreadID;
+    private Socket socket;
+    private Server server;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    public ServerThread(Socket socket,Server server,int id){
+        System.out.println(1);
+        this.socket = socket;
+
+        this.server = server;
+        this.ServerThreadID = id;
+        System.out.println(2);
+
+
+        System.out.println(4);
+
+    }
+
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        try {
+            try {
+
+                System.out.println(5);
+                InputStream in0 = socket.getInputStream();
+                OutputStream out0 = socket.getOutputStream();
+
+                System.out.println(6);
+
+                out = new ObjectOutputStream(out0);
+                in = new ObjectInputStream(in0);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("ServerThread start");
+            Object request1 = in.readObject();
+
+            System.out.println("ServerThread read object");
+            IConnectionRequest connectionRequest = (IConnectionRequest) request1;
+            user = connectionRequest.getUser();
+            System.out.println("user:  " + user.getNik());
+            user.CONNECT = true;
+            if(connectionRequest.connect(server,this)){
+                out.writeObject(new ConnectionRequestResult(true));
+                System.out.println("Connect new user: "+ user.getNik());
+
+
+                while (true){
+                    Request request = (Request) in.readObject();
+                    switch (request.reqest){
+                        case Request.ALL_USERS: {
+                            AllUsersRequestResult allUsersRequestResult = new AllUsersRequestResult();
+                            createUserList(allUsersRequestResult);
+                            out.writeObject(allUsersRequestResult);
+                            System.out.println(server.getUsers().size());
+                            for (int i = 0;i<server.getUsers().size();i++){
+                                System.out.println(server.getUsers().get(i).getNik());
+                            }
+                        }break;
+                        case Request.NEW_CHAT:{
+                            createNewChat((NewChatRequest)request);
+
+                        }break;
+                        case Request.MESSAGE:{
+                            processingMessageRequest((MessageRequest)request);
+                        }break;
+                        default:
+                            System.out.println("Error command");
+                            break;
+                    }
+                }
+
+
+            }
+            else {
+                System.out.println("Ohhh, NO!");
+                out.writeObject(new ConnectionRequestResult(false));
+            }
+            user.CONNECT = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void processingMessageRequest(MessageRequest request) {
+        int id = request.message.getIdChat();
+        request.message.setDate(new Date());
+        UsersChatID users = server.getUsersFromChatsByID(id);
+        for(int i = 0;i<users.usersNik.size();i++){
+            String name = users.usersNik.get(i);
+            ServerThread serverThread = server.getServerThreads().get(name);
+            if(serverThread!= null)
+                serverThread.addMessageToUsersChatByID(request.message);
+            else {
+                System.out.println("error ProcessingMess.. not found serverThread with name: "+ name);
+            }
+        }
+    }
+
+    private void createNewChat(NewChatRequest request) {
+
+
+        int id = server.getChatID();
+        for(int i = 0;i<request.getUsers().size();i++){
+            User0 user0 = new User0(request.getUsers().get(i));
+            ServerThread serverThread1= server.getServerThreads().get(user0.getNik());
+            if(serverThread1!=null){
+                serverThread1.newChatServerThread(new Chat(request.getUsers(),new ArrayList<>(),id));
+            }
+            else
+                System.out.println("error! cant fint user:" + request.getUsers().get(i));
+        }
+        server.addNewChatToChatsId(new Chat(request.getUsers(),new ArrayList<>(),id));
+        return;
+    }
+
+    private void createUserList(AllUsersRequestResult allUsersRequestResult) {
+//        System.out.println("allUsers at map");
+//        ConcurrentMap<String,ServerThread> xxxx = server.getServerThreads();
+//        xxxx.entrySet().forEach(
+//                entry ->
+//                {
+//                    String user0 = entry.getKey();
+//                    ServerThread serverThread= entry.getValue();
+//
+//                    System.out.println(user0);
+//                    System.out.println("serverThread:" + serverThread.getUser().getNik());
+//                }
+//        );
+//        System.out.println("end");
+//        System.out.println("find me");
+//        System.out.println(xxxx.get(user.getNik()).getUser().getNik());
+//        System.out.println("endFind");
+
+        CopyOnWriteArrayList<User> users= server.getUsers();
+        for(int i = 0;i<users.size();i++){
+            allUsersRequestResult.addUserNik(users.get(i).getNik());
+        }
+        return;
+    }
+
+    public void newChatServerThread(Chat chat){
+        NewChatRequestReult newChatRequestReult = new NewChatRequestReult(chat);
+        try {
+            out.writeObject(newChatRequestReult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addMessageToUsersChatByID(Message message){
+        try {
+            System.out.println("new mess");
+            out.writeObject(new MessageResult(message));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+}
